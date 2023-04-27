@@ -6,27 +6,12 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -70,15 +55,15 @@ fun ExPandableScreen(modifier: Modifier) {
 @Composable
 fun CardList(cardList: List<CardItem>, modifier: Modifier) {
     LazyColumn(modifier = modifier) {
-        items(cardList) { cardItem ->
-            LoadCard(cardItem, modifier)
+        itemsIndexed(cardList) { index, cardItem ->
+            LoadCard(cardItem, index, modifier)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoadCard(cardItem: CardItem, modifier: Modifier) {
+fun LoadCard(cardItem: CardItem, index: Int, modifier: Modifier) {
     var isExpanded by remember { mutableStateOf(false) }
     Card(
         shape = RoundedCornerShape(10.dp),
@@ -90,15 +75,28 @@ fun LoadCard(cardItem: CardItem, modifier: Modifier) {
         )
     ) {
         Column(modifier) {
-            Text(modifier = Modifier.fillMaxWidth(),text = "1")
-            Text(modifier = Modifier.fillMaxWidth(),text = cardItem.writer)
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp),
+                text = "$index", style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 10.dp),
+                text = cardItem.writer, style = MaterialTheme.typography.bodySmall,
+            )
             Image(
                 painter = painterResource(cardItem.resId), contentDescription = "",
-                Modifier.size(200.dp,200.dp).clickable {
-                    isExpanded = !isExpanded
-                },
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clickable {
+                        isExpanded = !isExpanded
+                    },
             )
-            if(isExpanded){
+            if (isExpanded) {
                 CardInfo()
             }
         }
@@ -111,16 +109,20 @@ fun CardInfo() {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp), text = "으하하하하하ㅏ"
+            .height(50.dp),
+        text = "으하하하하하ㅏ",
+        style = MaterialTheme.typography.bodyMedium
     )
 }
 
 @Composable
 fun TopAppBar() {
     Text(
-        modifier = Modifier.fillMaxWidth().background(Color.Black),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Black),
         text = "ExpandableAppBar",
-        style = MaterialTheme.typography.headlineMedium,
+        style = MaterialTheme.typography.bodyLarge,
         color = Color.White,
         textAlign = TextAlign.Center
     )
