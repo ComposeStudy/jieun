@@ -90,15 +90,17 @@ fun LoadCard(cardItem: CardItem, modifier: Modifier) {
         )
     ) {
         Column(modifier) {
-            Text(modifier = Modifier.fillMaxWidth(),text = "1")
-            Text(modifier = Modifier.fillMaxWidth(),text = cardItem.writer)
+            Text(modifier = Modifier.fillMaxWidth(), text = "1")
+            Text(modifier = Modifier.fillMaxWidth(), text = cardItem.writer)
             Image(
                 painter = painterResource(cardItem.resId), contentDescription = "",
-                Modifier.size(200.dp,200.dp).clickable {
-                    isExpanded = !isExpanded
-                },
+                Modifier
+                    .size(200.dp, 200.dp)
+                    .clickable {
+                        isExpanded = !isExpanded
+                    },
             )
-            if(isExpanded){
+            if (isExpanded) {
                 CardInfo()
             }
         }
@@ -118,7 +120,9 @@ fun CardInfo() {
 @Composable
 fun TopAppBar() {
     Text(
-        modifier = Modifier.fillMaxWidth().background(Color.Black),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Black),
         text = "ExpandableAppBar",
         style = MaterialTheme.typography.headlineMedium,
         color = Color.White,
