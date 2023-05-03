@@ -94,6 +94,10 @@ fun SelectQuantityButton(
 @Preview
 @Composable
 fun StartOrderPreview() {
-//    StartOrderScreen(quantityOptions = quantityOptions,
-//   )
+    StartOrderScreen(
+        quantityOptions = quantityOptions,
+        onNextButtonClicked = {
+
+        }
+    )
 }

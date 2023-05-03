@@ -47,7 +47,7 @@ import com.example.cupcake.ui.StartOrderScreen
 /**
  * Composable that displays the topBar and displays back button if back navigation is possible.
  */
-enum class CupcakeScreen() { //앱 화면 (경로)
+enum class CupcakeScreen { //앱 화면 (경로)
     Start,
     Flavor,
     Pickup,
