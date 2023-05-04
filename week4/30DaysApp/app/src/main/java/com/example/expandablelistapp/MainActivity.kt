@@ -3,6 +3,7 @@ package com.example.expandablelistapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,8 +34,8 @@ class MainActivity : ComponentActivity() {
                     ExPandableScreen(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(10.dp)
-                    ) //얘 순서 중요
+                            .padding(10.dp) //FIXME 패딩 증가에 따라 비율이 다르게 줄어든다 ?
+                    )
                 }
             }
         }
@@ -47,7 +48,7 @@ fun ExPandableScreen(modifier: Modifier) {
     val cardData = CardData().loadCardList()
     Scaffold(topBar = {
         TopAppBar()
-    }) { padding ->
+    }) { padding -> // top에만 패딩이 들어가있음 , 안드에서 지정해주는 값이 따로 있는듯
         CardList(cardList = cardData, modifier = modifier.padding(padding))
     }
 }
@@ -65,39 +66,42 @@ fun CardList(cardList: List<CardItem>, modifier: Modifier) {
 @Composable
 fun LoadCard(cardItem: CardItem, index: Int, modifier: Modifier) {
     var isExpanded by remember { mutableStateOf(false) }
-    Card(
+    Card( //FIXME 카드를 쓰지 말아보자 -> Surface
         shape = RoundedCornerShape(10.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(10.dp),
+        modifier = modifier.fillMaxSize(),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 10.dp
-        )
+        ),
+        border = BorderStroke(2.dp, MaterialTheme.colorScheme.primary),
+//        colors = CardDefaults.cardColors(containerColor =  MaterialTheme.colorScheme.tertiary)
     ) {
-        Column(modifier) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp),
-                text = "$index", style = MaterialTheme.typography.bodyMedium,
-            )
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 10.dp),
-                text = cardItem.writer, style = MaterialTheme.typography.bodySmall,
-            )
-            Image(
-                painter = painterResource(cardItem.resId), contentDescription = "",
-                Modifier
-                    .fillMaxWidth()
-                    .height(200.dp)
-                    .clickable {
-                        isExpanded = !isExpanded
-                    },
-            )
-            if (isExpanded) {
-                CardInfo()
+        //이거 cardBackgroudColor가 없는 이유는 MaterialDesign 디자인 안써서?ㅠ
+        Surface(contentColor = MaterialTheme.colorScheme.tertiary) {
+            Column(modifier) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp),
+                    text = "$index", style = MaterialTheme.typography.bodyMedium,
+                )
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp),
+                    text = cardItem.writer, style = MaterialTheme.typography.bodySmall,
+                )
+                Image(
+                    painter = painterResource(cardItem.resId), contentDescription = "",
+                    Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clickable {
+                            isExpanded = !isExpanded
+                        },
+                )
+                if (isExpanded) {
+                    CardInfo()
+                }
             }
         }
     }
@@ -106,11 +110,12 @@ fun LoadCard(cardItem: CardItem, index: Int, modifier: Modifier) {
 
 @Composable
 fun CardInfo() {
+    //TODO 애니메이션 추가
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .height(50.dp),
-        text = "으하하하하하ㅏ",
+            .wrapContentHeight(),
+        text = "으하하하하하ㅏ 으하하하하하ㅏ 으하하하하하ㅏ 으하하하하하ㅏ 으하하하하하ㅏ",
         style = MaterialTheme.typography.bodyMedium
     )
 }
@@ -120,7 +125,7 @@ fun TopAppBar() {
     Text(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.Black),
+            .background(MaterialTheme.colorScheme.primary),
         text = "ExpandableAppBar",
         style = MaterialTheme.typography.bodyLarge,
         color = Color.White,
@@ -131,7 +136,7 @@ fun TopAppBar() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    ExpandableListAppTheme {
+    ExpandableListAppTheme(darkTheme = true) {
         ExPandableScreen(Modifier)
     }
 }
