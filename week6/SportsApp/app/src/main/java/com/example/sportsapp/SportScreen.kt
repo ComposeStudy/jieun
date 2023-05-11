@@ -21,7 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.sportsapp.data.Sport
 import com.example.sportsapp.ui.theme.SportsAppTheme
 
@@ -29,12 +28,8 @@ enum class SportContentType {
     LIST_ONLY, LIST_AND_DETAIL
 }
 
-//enum class SportScreen(title: String) {
-//    Title("Sports"),
-//}
-
 @Composable
-fun LunchOrderAppBar(
+fun SportScreenAppBar(
     isFirstScreen: Boolean,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
@@ -60,8 +55,8 @@ fun LunchOrderAppBar(
 
 @Composable
 fun SportsApp(windowSize: WindowWidthSizeClass, viewModel: SportsViewModel = viewModel()) {
-    val viewModel: SportsViewModel = viewModel
-    val uiState: SportUiState = viewModel.uiState.collectAsState().value
+    val sportsViewModel: SportsViewModel = viewModel
+    val uiState: SportUiState = sportsViewModel.uiState.collectAsState().value
 
     val contentType: SportContentType = when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -79,8 +74,8 @@ fun SportsApp(windowSize: WindowWidthSizeClass, viewModel: SportsViewModel = vie
     }
 
     SportScreen(contentType, uiState, onClickItem = {
-        viewModel.updateDetailsScreenStates(it)
-    }, viewModel)
+        sportsViewModel.updateDetailsScreenStates(it)
+    }, sportsViewModel)
 
 }
 
@@ -91,17 +86,12 @@ fun SportScreen(
     onClickItem: (Sport) -> Unit,
     viewModel: SportsViewModel
 ) {
-//    val navController = rememberNavController() // 화면 간 이동 담당
-//    val backStackEntry by navController.currentBackStackEntryAsState()
-//    val currentScreen = SportScreen.valueOf(
-//        backStackEntry?.destination?.route ?: SportScreen.Title.name
-//    )
     val activity = LocalContext.current as Activity
     if (contentType != SportContentType.LIST_AND_DETAIL) {
         // ClickEvent에 따라 listScreen or DetailScreen으로 전환
         Scaffold(
             topBar = {
-                LunchOrderAppBar(
+                SportScreenAppBar(
                     isFirstScreen = uiState.isFirstScreen,
                     canNavigateBack = !uiState.isFirstScreen,
                     navigateUp = { viewModel.onBackPressed() }
