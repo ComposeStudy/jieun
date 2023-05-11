@@ -3,10 +3,12 @@ package com.example.sportsapp
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -15,9 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -87,8 +92,7 @@ fun SportScreen(
     viewModel: SportsViewModel
 ) {
     val activity = LocalContext.current as Activity
-    if (contentType != SportContentType.LIST_AND_DETAIL) {
-        // ClickEvent에 따라 listScreen or DetailScreen으로 전환
+    if (contentType != SportContentType.LIST_AND_DETAIL) { // 태블릿 화면이 아닐때는 앱바가 필요 없음
         Scaffold(
             topBar = {
                 SportScreenAppBar(
@@ -98,6 +102,7 @@ fun SportScreen(
                 )
             }
         ) { paddings ->
+            // ClickEvent에 따라 listScreen or DetailScreen으로 전환
             if (uiState.isFirstScreen) {
                 SportsListScreen(Modifier.padding(paddings), uiState = uiState, onClickItem)
             } else {
@@ -110,9 +115,9 @@ fun SportScreen(
             }
         }
 
-    } else {
+    } else { //태블릿 화면일때는 list화면과 detail화면이 같이나와야함
         SportsListAndDetailScreen(uiState = uiState, onClickItem, onBackPressed = {
-            activity.finish()
+            activity.finish() //태블릿화면일때는 back 버튼 누르면 앱 종료되어야함
         })
     }
 }
@@ -149,14 +154,17 @@ fun SportsItem(
     sport: Sport, onClickItem: (Sport) -> Unit
 ) {
     Row(
-        Modifier.height(150.dp)
+        Modifier
+            .height(180.dp)
+            .clip(shape = RoundedCornerShape(10.dp))
+            .background(Color.White)
+            .clickable {
+                onClickItem(sport)
+            },
     ) {
         Image(
             modifier = Modifier
-                .weight(1f)
-                .clickable {
-                    onClickItem(sport)
-                },
+                .weight(1f),
             painter = painterResource(sport.imageResourceId),
             contentDescription = "",
         )
@@ -164,7 +172,8 @@ fun SportsItem(
             modifier = Modifier
                 .weight(2f)
                 .fillMaxSize()
-                .padding(10.dp)
+                .padding(start = 10.dp, end = 10.dp),
+            verticalArrangement = Arrangement.Center
         ) {
             Text(text = stringResource(sport.titleResourceId))
             Spacer(
@@ -172,13 +181,13 @@ fun SportsItem(
                     .fillMaxWidth()
                     .height(10.dp)
             )
-            Text(text = stringResource(sport.subtitleResourceId))
+            Text(text ="News", fontWeight = FontWeight.Bold, color = Color.LightGray)
             Spacer(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(10.dp)
             )
-            Text(text = stringResource(sport.sportDetails))
+            Text(text = "Here is ${stringResource(sport.titleResourceId)} news!")
         }
     }
 }
@@ -195,10 +204,12 @@ fun SportsDetailScreen(modifier: Modifier, sport: Sport, onBackPressed: () -> Un
                 modifier = modifier
                     .align(Alignment.BottomStart)
                     .padding(start = 10.dp, bottom = 10.dp),
-                text = stringResource(sport.titleResourceId)
+                text = stringResource(sport.titleResourceId),
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
-        Text(modifier = Modifier.fillMaxWidth(), text = "News")
+        Text(modifier = Modifier.fillMaxWidth(), text = "News", fontWeight = FontWeight.Bold, color = Color.LightGray)
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()

@@ -6,12 +6,12 @@ import com.example.sportsapp.R
 
 class DataSource {
     fun getSportsItems(): List<Sport> {
-        return listOf<Sport>(
+        return listOf(
             Sport(
                 id = 1,
                 titleResourceId = R.string.baseball,
                 subtitleResourceId = R.string.sports_list_subtitle,
-                playerCount = 9,
+                playerCount = 9 ,
                 olympic = true,
                 imageResourceId = R.drawable.ic_baseball_square,
                 sportsImageBanner = R.drawable.ic_baseball_banner,
