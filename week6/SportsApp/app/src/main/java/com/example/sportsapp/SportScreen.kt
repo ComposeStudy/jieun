@@ -164,7 +164,8 @@ fun SportsItem(
     ) {
         Image(
             modifier = Modifier
-                .weight(1f),
+                .weight(1f)
+                .clip(shape = RoundedCornerShape(20.dp)),
             painter = painterResource(sport.imageResourceId),
             contentDescription = "",
         )
